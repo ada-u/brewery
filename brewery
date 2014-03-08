@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Config
-#declare -r PWD=$(cd $(dirname $0);pwd)
+declare -r PWD=$(dirname $(readlink $0))
 declare -r BREW_FILE="Brewfile"
 declare -r BREW_CMD='/usr/local/bin/brew'
 
@@ -27,7 +27,7 @@ EOS
 build() {
 
   # Header
-  cat templates/header > ${BREW_FILE}
+  cat ${PWD}/templates/header > ${BREW_FILE}
 
   # Export repositories
   echo -e "\n# Add repositories"               >> ${BREW_FILE}
@@ -52,7 +52,7 @@ build() {
 
   # Footer
   echo >> ${BREW_FILE}
-  cat templates/footer >> ${BREW_FILE}
+  cat ${PWD}/templates/footer >> ${BREW_FILE}
 }
 
 # Init Brewfile

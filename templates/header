@@ -1,0 +1,5 @@
+# Update homebrew
+update
+
+# Upgrade already-installed packages
+upgrade

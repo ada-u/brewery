@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# Config
+#declare -r PWD=$(cd $(dirname $0);pwd)
+declare -r BREW_FILE="Brewfile"
+declare -r BREW_CMD='/usr/local/bin/brew'
+
+# Be sure cask is installed, if not this create/update without cask
+declare -r WAS_CASK_INSTALLED=$(${BREW_CMD} cask > /dev/null 2>&1 ; echo $?)
+
+# Help
+usage() {
+  awk '{print}' <<EOS
+
+Usage:    brewery <command>
+
+Option:
+
+  init    initializes a new Brewfile
+  update  updates a Brewfile
+  help    shows help
+
+EOS
+}
+
+# Make Brewfile
+build() {
+
+  # Header
+  cat templates/header > ${BREW_FILE}
+
+  # Export repositories
+  echo -e "\n# Add repositories"               >> ${BREW_FILE}
+  ${BREW_CMD} tap | awk '{ print "tap " $1; }' >> ${BREW_FILE}
+
+  # Export tasks to install brew-cask
+  if [ $WAS_CASK_INSTALLED} ]; then
+    echo -e "\n# Install brew-cask"    >> ${BREW_FILE}
+    echo -e "tap phinze/homebrew-cask" >> ${BREW_FILE}
+    echo -e "install brew-cask\n"      >> ${BREW_FILE}
+  fi
+
+  # Export the installed brew-packages
+  echo '# Install brew-packages' >> ${BREW_FILE}
+  ${BREW_CMD} leaves | awk '{ print "install " $1; }' >> ${BREW_FILE}
+
+  # Export the installed brew-cask-packages
+  if [ ${WAS_CASK_INSTALLED} ]; then
+    echo -e "\n# Install cask-packages" >> ${BREW_FILE}
+    ${BREW_CMD} cask list | awk '{ print "cask install " $1; }' >> ${BREW_FILE}
+  fi
+
+  # Footer
+  echo >> ${BREW_FILE}
+  cat templates/footer >> ${BREW_FILE}
+}
+
+# Init Brewfile
+init() {
+  if [ -e ${BREW_FILE} ]; then
+    echo -e "\033[1;31mWarning\033[m: ${BREW_FILE} is already exsits."
+    exit 1
+  else
+    build
+    echo -e "\033[0;32mBrewfile was successfully created.\033[m"
+  fi
+}
+
+# Update Brewfile
+update() {
+  build
+  echo -e "\033[0;32mBrewfile was successfully updated.\033[m"
+}
+
+# Parse short options
+while getopts dh OPT
+do
+  case ${OPT} in
+    h)
+      usage
+      exit 0
+      ;;
+    \?)
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+# Parse long options
+if [[ $1 =~ ^(init|update)$ ]]; then
+  $@
+elif [[ $1 =~ ^(help)$ ]]; then
+  usage
+  exit 0
+else
+  echo -e "\033[1;31mError\033[m: Invalid sub-command $1" >&2
+  usage
+  exit 1
+fi
+

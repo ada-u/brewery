@@ -10,7 +10,7 @@ $ cd ~/src/brewery
 $ ./install.sh
 ```
 
-## Dump Breafile
+## Dump
 
 `init` dumps new Brewfile in current directory, but it does not overwrite existing Brewfile.
 
@@ -21,6 +21,12 @@ $ brewery init
 
 ```
 $ brewery update
+```
+
+## Restore
+
+```
+$ brew bundle
 ```
 
 ## Example

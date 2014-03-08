@@ -27,9 +27,8 @@ $ brewery update
 
 ```
 $ brewery update
-```
+$ cat Brewfile
 
-```
 # Update homebrew
 update
 

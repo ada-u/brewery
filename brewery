@@ -34,7 +34,7 @@ build() {
   ${BREW_CMD} tap | awk '{ print "tap " $1; }' >> ${BREW_FILE}
 
   # Export tasks to install brew-cask
-  if [ $WAS_CASK_INSTALLED} ]; then
+  if [ ${WAS_CASK_INSTALLED} -eq 0 ]; then
     echo -e "\n# Install brew-cask"    >> ${BREW_FILE}
     echo -e "tap phinze/homebrew-cask" >> ${BREW_FILE}
     echo -e "install brew-cask\n"      >> ${BREW_FILE}
@@ -45,7 +45,7 @@ build() {
   ${BREW_CMD} leaves | awk '{ print "install " $1; }' >> ${BREW_FILE}
 
   # Export the installed brew-cask-packages
-  if [ ${WAS_CASK_INSTALLED} ]; then
+  if [ ${WAS_CASK_INSTALLED} -eq 0 ]; then
     echo -e "\n# Install cask-packages" >> ${BREW_FILE}
     ${BREW_CMD} cask list | awk '{ print "cask install " $1; }' >> ${BREW_FILE}
   fi

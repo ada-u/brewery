@@ -1,6 +1,6 @@
 ## Brewery
 
-`brewery` is a tool to simply dump a Brewfile.
+Brewery is a tool to simply dump a Brewfile.
 
 ## Install
 
@@ -17,7 +17,7 @@ $ ./install.sh
 ```
 $ brewery init
 ```
-`update` create or overwrite Brewfile in current direcoty.
+`update` creates or overwrites Brewfile in current direcoty.
 
 ```
 $ brewery update
